@@ -1,36 +1,37 @@
 import os
 import whisper
 
-def trascrivi_audio(cartella):
-    """
-    Cerca file audio nella cartella e li trascrive in un file di testo.
-    """
-    model = whisper.load_model("base")
-    print("Modello Whisper caricato.")
+# 📂 Definizione dei percorsi per i file audio e le trascrizioni
+audio_dir = r"C:\Users\Utente\Desktop\Sbobinetor\audio"
+output_dir = r"C:\Users\Utente\Desktop\Sbobinetor\trascrizioni"
 
-    # Trova tutti i file audio nella cartella
-    audio_files = [f for f in os.listdir(cartella) if f.endswith((".mp3", ".m4a", ".wav"))]
+# 🛠️ Creazione della cartella output se non esiste
+os.makedirs(output_dir, exist_ok=True)
 
-    if not audio_files:
-        print("❌ Nessun file audio trovato.")
-        return
+# 🔍 Controlla se la cartella audio esiste, altrimenti esce con un errore
+if not os.path.exists(audio_dir):
+    print(f"❌ Errore: La cartella audio non esiste -> {audio_dir}")
+    exit()
 
-    with open("trascrizione.txt", "w", encoding="utf-8") as f:
-        for audio in audio_files:
-            audio_path = os.path.join(cartella, audio)
-            print(f"🎙️ Trascrizione di {audio} in corso...")
+# 🧠 Caricamento del modello Whisper
+print("📥 Caricamento del modello Whisper... (potrebbe richiedere alcuni secondi)")
+model = whisper.load_model("small")
+print("✅ Modello Whisper caricato con successo!")
 
-            result = model.transcribe(audio_path, fp16=False)
-            transcript = result.get("text", "").strip()
+# 🔄 Processa tutti i file audio nella cartella
+for filename in os.listdir(audio_dir):
+    if filename.endswith(".m4a"):
+        file_path = os.path.join(audio_dir, filename)
+        print(f"🎙️ Trascrizione in corso: {filename}")
 
-            if transcript:
-                f.write(f"--- Trascrizione di {audio} ---\n{transcript}\n\n")
-                print(f"✅ Trascritto: {audio}")
-            else:
-                print(f"⚠️ Nessuna trascrizione per {audio}")
+        # ⏳ Esegui la trascrizione con Whisper
+        result = model.transcribe(file_path, language="it")
 
-    print("📄 Trascrizione completata! Controlla 'trascrizione.txt'.")
+        # 💾 Salvataggio della trascrizione in un file di testo
+        text_file_path = os.path.join(output_dir, filename.replace(".m4a", ".txt"))
+        with open(text_file_path, "w", encoding="utf-8") as f:
+            f.write(result["text"])
 
-if __name__ == "__main__":
-    cartella_audio = "./audio"  # Modifica con il percorso della cartella
-    trascrivi_audio(cartella_audio)
+        print(f"✅ Trascrizione completata e salvata in: {text_file_path}")
+
+print("🎉 Operazione completata con successo!")
