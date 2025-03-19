@@ -12,7 +12,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 # 🛠️ Caricamento del modello Whisper migliorato
 print("\U0001f4e5 Caricamento del modello Whisper...")
-model = whisper.load_model("medium")  # Oppure "large"
+model = whisper.load_model("large")  # Oppure "large"
 print("✅ Modello caricato!")
 
 # ⏺ Funzione per formattare il tempo in modo leggibile
