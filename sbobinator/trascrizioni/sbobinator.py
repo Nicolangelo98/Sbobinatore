@@ -9,7 +9,7 @@ output_dir = r"C:\Users\Utente\Desktop\Sbobinetor\trascrizioni"
 os.makedirs(output_dir, exist_ok=True)
 
 # 🛠️ Caricamento del modello Whisper migliorato
-model = whisper.load_model("small")  # Oppure "large"
+model = whisper.load_model("large")  # Oppure "large"
 
 # 📕 Otteniamo tutti i file audio
 files = [f for f in os.listdir(audio_dir) if f.endswith(".m4a")]
